@@ -8,17 +8,25 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      models.Article.belongsTo(models.User, {
+        as: "user",
+        foreignKey: "userId",
+      });
+      models.Article.hasOne(models.Category, {
+        as: "category",
+        foreignKey: "articleId",
+        onDelete: "CASCADE",
+      });
     }
   }
   Article.init(
     {
-      titre: DataTypes.STRING,
-      tranche_age: DataTypes.STRING,
-      etat: DataTypes.STRING,
-      valeur: DataTypes.STRING,
+      title: DataTypes.STRING,
+      ageRange: DataTypes.STRING,
+      conditon: DataTypes.STRING,
       image: DataTypes.STRING,
-      date: DataTypes.STRING,
+      price: DataTypes.INTEGER,
+      description: DataTypes.STRING,
     },
     {
       sequelize,
