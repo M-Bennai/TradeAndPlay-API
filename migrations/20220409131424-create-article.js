@@ -16,7 +16,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      conditon: {
+      condition: {
         type: Sequelize.STRING,
         allowNull: false,
       },

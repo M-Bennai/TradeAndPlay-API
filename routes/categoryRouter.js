@@ -8,8 +8,8 @@ categoryRouter.post(
   /*validateToken,*/ async (req, res) => {
     console.log("req.body :>> ", req.body);
     try {
-      const { category, articleId } = req.body;
-      const newCategory = await addCategory(category, articleId);
+      const { name, articleId } = req.body;
+      const newCategory = await addCategory(name, articleId);
       res.status(200).json({ msg: "success", newCategory });
     } catch (error) {
       console.log("error :>> ", error);
