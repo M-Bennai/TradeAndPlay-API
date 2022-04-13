@@ -14,12 +14,12 @@ app.get("/", (req, res) => {
   res.send("working");
 });
 
-if (process.env.NODE_DEV === "production") {
-  app.use(express.static("build"));
-  app.get("*", (req, res) => {
-    req.sendFile(path.resolve(__dirname, "build", "index.html"));
-  });
-}
+// if (process.env.NODE_DEV === "production") {
+//   app.use(express.static("build"));
+//   app.get("*", (req, res) => {
+//     req.sendFile(path.resolve(__dirname, "build", "index.html"));
+//   });
+// }
 
 app.use("/api", require("./routes/index"));
 
