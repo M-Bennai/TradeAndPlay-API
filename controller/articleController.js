@@ -48,6 +48,17 @@ const articleController = {
     const article = await Article.findAll();
     return article;
   },
+
+  searchArticle: async (req, res) => {
+    let query = {};
+    if (req.query.keyword) {
+      query.$or = [{ title: { $regex: req.query.keyword } }];
+    }
+    let article = await Article.find(query);
+    return res
+      .status(200)
+      .send({ message: "successfully fetched", data: article });
+  },
 };
 
 module.exports = articleController;

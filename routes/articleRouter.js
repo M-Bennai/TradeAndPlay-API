@@ -1,11 +1,13 @@
 const articleRouter = require("express").Router();
 const jsonwebtoken = require("jsonwebtoken");
+const { HostNotFoundError } = require("sequelize");
 const {
   addArticle,
   getAllArticle,
   getOneArticle,
   getAllUserArticle,
   deleteArticle,
+  searchArticle,
 } = require("../controller/articleController");
 
 articleRouter.post(
@@ -68,6 +70,16 @@ articleRouter.delete("/delete/:id", async (req, res) => {
     res.status(200).json("article deleted");
   } catch (error) {
     res.status(400).json("cannot delete user");
+  }
+});
+
+articleRouter.get("/search", async (req, res) => {
+  try {
+    const { article } = req.query;
+    await searchArticle();
+    res.status(200).json({ msg: "article found", article });
+  } catch (error) {
+    res.status(400).json("no result for this search");
   }
 });
 module.exports = articleRouter;

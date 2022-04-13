@@ -52,28 +52,34 @@ userRouter.post("/register", async (req, res) => {
 });
 
 userRouter.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ where: { email: email } });
-  if (!user) {
-    res.status(400).json({ msg: "No user with that email" });
-  }
-  const matchPassword = await bcrypt.compare(password, user.password);
-  //console.log("matchPassword :>> ", matchPassword);
-  if (!matchPassword) {
-    res.status(400).json({ msg: "Wrong email or password" });
-  } else {
-    const accessToken = await jsonwebtoken.sign(
-      {
-        email: user.email,
-        role: user.role,
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        image: user.image,
-      },
-      process.env.JWT_SECRET
-    );
-    res.status(200).json({ msg: "You logged in", token: accessToken, user });
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ where: { email: email } });
+    if (!user) {
+      res.status(400).json({ msg: "No user with that email" });
+    }
+
+    const matchPassword = await bcrypt.compare(password, user.password);
+    if (!matchPassword) {
+      res.status(400).json({ msg: "Wrong email or password" });
+    } else {
+      const accessToken = await jsonwebtoken.sign(
+        {
+          email: user.email,
+          role: user.role,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          id: user.id,
+        },
+        process.env.JWT_SECRET
+      );
+      console.log("req.user :>> ", req.user);
+      res.status(200).json({ msg: "You logged in", token: accessToken, user });
+    }
+  } catch (error) {
+    console.log("error :>> ", error);
+
+    res.status(400).json({ msg: "An error was occured", error: error });
   }
 });
 
