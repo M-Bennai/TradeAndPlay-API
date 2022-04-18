@@ -10,6 +10,7 @@ const {
   getClientUser,
   deleteUser,
   updateUserPassword,
+  getOneClientUser,
 } = require("../controller/userController");
 const validateToken = require("../middleware/authMiddleware");
 
@@ -107,14 +108,25 @@ userRouter.get("/allClients", async (req, res) => {
   }
 });
 
-userRouter.get("/getOneClientUser/:id", async (req, res) => {
+userRouter.get("/:id", async (req, res) => {
+  const { id } = req.params;
   try {
-    const { id } = req.params;
-    const oneClient = await getOneConsultantUser(id);
+    const oneClient = await getOneClientUser(id);
     res.status(200).json({ msg: "success", oneClient });
   } catch (error) {
     console.log("error :>> ", error);
     res.status(200).json("an error was occured");
+  }
+});
+
+userRouter.get("/all/:id", validateToken, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const allUser = await getOneClientUser({ id });
+    res.status(200).json({ msg: "success", allUser });
+  } catch (error) {
+    console.log("error :>> ", error);
+    res.status(400).json({ msg: "error" });
   }
 });
 

@@ -1,4 +1,4 @@
-const { User } = require("../models");
+const { User, Article } = require("../models");
 const { v4: uuidv4 } = require("uuid");
 
 const userController = {
@@ -37,7 +37,7 @@ const userController = {
     return clientsUsers;
   },
 
-  getOneClientUser: async (i) => {
+  getOneClientUser: async (id) => {
     const oneClient = await User.findByPk(id);
     return oneClient;
   },

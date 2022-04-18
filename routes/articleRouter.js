@@ -1,6 +1,6 @@
 const articleRouter = require("express").Router();
 const jsonwebtoken = require("jsonwebtoken");
-const { HostNotFoundError } = require("sequelize");
+
 const {
   addArticle,
   getAllArticle,
@@ -60,6 +60,17 @@ articleRouter.get("/oneArticle/:id", async (req, res) => {
   } catch (error) {
     console.log("error :>> ", error);
     res.status(400).json({ msg: "an error was occured", error });
+  }
+});
+
+articleRouter.get("/all/:id", async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const allArticleByUser = await getAllUserArticle({ userId });
+    res.status(200).json({ msg: "success", allArticleByUser });
+  } catch (error) {
+    console.log("error :>> ", error);
+    res.status(400).json({ msg: "error" });
   }
 });
 

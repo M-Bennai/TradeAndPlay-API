@@ -1,6 +1,6 @@
 const { Article } = require("../models");
 const { v4: uuidv4 } = require("uuid");
-
+const { User } = require("../models");
 const articleController = {
   addArticle: async ({
     title,
@@ -25,12 +25,12 @@ const articleController = {
   },
 
   getAllUserArticle: async (id) => {
-    const allArticle = await Article.findAll({
+    const allUserArticle = await Article.findAll({
       where: { userId: id.id },
       order: [["createdAt", "ASC"]],
       include: [{ model: User, as: "user" }],
     });
-    return allArticle;
+    return allUserArticle;
   },
 
   deleteArticle: async (id) => {
