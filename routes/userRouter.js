@@ -57,12 +57,12 @@ userRouter.post("/login", async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ where: { email: email } });
     if (!user) {
-      res.status(400).json({ msg: "No user with that email" });
+      res.status(400).json({ msg: "Pas d'utilisateur avec cet email" });
     }
 
     const matchPassword = await bcrypt.compare(password, user.password);
     if (!matchPassword) {
-      res.status(400).json({ msg: "Wrong email or password" });
+      res.status(400).json({ msg: "Mauvais email ou mot de passe" });
     } else {
       const accessToken = await jsonwebtoken.sign(
         {
@@ -72,6 +72,7 @@ userRouter.post("/login", async (req, res) => {
           lastName: user.lastName,
           id: user.id,
         },
+
         process.env.JWT_SECRET
       );
       console.log("req.user :>> ", req.user);

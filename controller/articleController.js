@@ -25,6 +25,7 @@ const articleController = {
   },
 
   getAllUserArticle: async (id) => {
+    console.log("id dans le controller :>> ", id);
     const allUserArticle = await Article.findAll({
       where: { userId: id.id },
       order: [["createdAt", "ASC"]],
@@ -40,15 +41,27 @@ const articleController = {
         where: { id: id },
       });
   },
-  getOneArticle: async (id) => {
-    const article = await Article.findByPk(id);
-    return article;
-  },
+
   getAllArticle: async () => {
     const article = await Article.findAll();
     return article;
   },
-
+  getOneArticle: async (id) => {
+    const article = await Article.findOne({
+      where: { id: id },
+      include: [{ model: User, as: "user" }],
+    });
+    return article;
+  },
+  // getOneArticle: async (id) => {
+  //   const article = await Article.findByPk(id);
+  //   if (article === null) {
+  //     console.log("Not found!");
+  //   } else {
+  //     return article; // true
+  //     // Its primary key is 123
+  //   }
+  // },
   searchArticle: async (req, res) => {
     let query = {};
     if (req.query.keyword) {

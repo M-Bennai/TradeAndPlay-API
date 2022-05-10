@@ -4,10 +4,10 @@ const jsonwebtoken = require("jsonwebtoken");
 const {
   addArticle,
   getAllArticle,
-  getOneArticle,
   getAllUserArticle,
   deleteArticle,
   searchArticle,
+  getOneArticle,
 } = require("../controller/articleController");
 
 articleRouter.post(
@@ -15,15 +15,8 @@ articleRouter.post(
   /*validateToken*/ async (req, res) => {
     console.log("req.body :>> ", req.body);
 
-    const {
-      title,
-      ageRange,
-      condition,
-      image,
-      price,
-      description,
-      userId,
-    } = req.body;
+    const { title, ageRange, condition, image, price, description, userId } =
+      req.body;
     try {
       const newArticle = await addArticle({
         title,
@@ -56,7 +49,7 @@ articleRouter.get("/oneArticle/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const oneArticle = await getOneArticle(id);
-    res.status(200).json({ msg: success, oneArticle });
+    res.status(200).json({ msg: "success", oneArticle });
   } catch (error) {
     console.log("error :>> ", error);
     res.status(400).json({ msg: "an error was occured", error });
@@ -64,9 +57,10 @@ articleRouter.get("/oneArticle/:id", async (req, res) => {
 });
 
 articleRouter.get("/all/:id", async (req, res) => {
-  const { userId } = req.params;
+  const { id } = req.params;
+  console.log("userId je suis dans le routeur:>> ", id);
   try {
-    const allArticleByUser = await getAllUserArticle({ userId });
+    const allArticleByUser = await getAllUserArticle({ id });
     res.status(200).json({ msg: "success", allArticleByUser });
   } catch (error) {
     console.log("error :>> ", error);
@@ -77,6 +71,8 @@ articleRouter.get("/all/:id", async (req, res) => {
 articleRouter.delete("/delete/:id", async (req, res) => {
   try {
     const { id } = req.params;
+    // const { id } = req.query;
+    console.log("req.query :>> ", req.query);
     await deleteArticle(id);
     res.status(200).json("article deleted");
   } catch (error) {

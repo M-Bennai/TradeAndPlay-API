@@ -30,7 +30,7 @@ const userController = {
     }
   },
 
-  getClienttUser: async () => {
+  getClientUser: async () => {
     const clientsUsers = await User.findAll({
       where: { role: "client" },
     });
