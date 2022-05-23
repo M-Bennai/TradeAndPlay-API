@@ -24,12 +24,12 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      price: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
       description: {
         type: Sequelize.STRING,
+        allowNull: true,
+      },
+      trade: {
+        type: Sequelize.BOOLEAN,
         allowNull: true,
       },
       userId: {
@@ -39,6 +39,30 @@ module.exports = {
         foreignKey: true,
         references: {
           model: "Users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
+      categoryId: {
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
+        allowNull: false,
+        foreignKey: true,
+        references: {
+          model: "Categories",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
+      valueId: {
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
+        allowNull: false,
+        foreignKey: true,
+        references: {
+          model: "Values",
           key: "id",
         },
         onUpdate: "CASCADE",

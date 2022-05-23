@@ -44,6 +44,14 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
+      city: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      numberOfTransaction: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

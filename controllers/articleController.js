@@ -1,15 +1,19 @@
 const { Article } = require("../models");
 const { v4: uuidv4 } = require("uuid");
 const { User } = require("../models");
+const { Value } = require("../models");
+
 const articleController = {
   addArticle: async ({
     title,
     ageRange,
     condition,
     image,
-    price,
     description,
     userId,
+    valueId,
+    ageRangeId,
+    categoryId,
   }) => {
     const newArticle = await Article.create({
       id: uuidv4(),
@@ -17,9 +21,11 @@ const articleController = {
       ageRange,
       condition,
       image,
-      price,
       description,
       userId,
+      categoryId,
+      valueId,
+      ageRangeId,
     });
     return newArticle;
   },
@@ -32,6 +38,16 @@ const articleController = {
       include: [{ model: User, as: "user" }],
     });
     return allUserArticle;
+  },
+
+  getAllArticleByValue: async (id) => {
+    console.log("id dans le controller :>> ", id);
+    const allArticleByValue = await Article.findAll({
+      where: { valueId: id.id },
+      order: [["createdAt", "ASC"]],
+      include: [{ model: Value, as: "value" }],
+    });
+    return allArticleByValue;
   },
 
   deleteArticle: async (id) => {
@@ -62,16 +78,17 @@ const articleController = {
   //     // Its primary key is 123
   //   }
   // },
-  searchArticle: async (req, res) => {
-    let query = {};
-    if (req.query.keyword) {
-      query.$or = [{ title: { $regex: req.query.keyword } }];
-    }
-    let article = await Article.find(query);
-    return res
-      .status(200)
-      .send({ message: "successfully fetched", data: article });
-  },
-};
+  // searchArticle: async () => {
+  //   // if (req.query.title) {
+  //   const searchTitle = await Article.findAll({
+  //     where: {
+  //       title: {
+  //         [Op.like]: `%${title}`,
+  //       },
+  //     },
+  //   });
 
+  //   return searchTitle;
+  // },
+};
 module.exports = articleController;

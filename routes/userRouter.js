@@ -2,6 +2,8 @@ const userRouter = require("express").Router();
 const { User } = require("../models");
 const bcrypt = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
+const multer = require("multer");
+const path = require("path");
 const {
   addUser,
   updateUserEmail,
@@ -14,7 +16,31 @@ const {
 } = require("../controller/userController");
 const validateToken = require("../middleware/authMiddleware");
 
-userRouter.post("/register", async (req, res) => {
+const fileStorageEngine = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "Images");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+const upload = multer({
+  storage: fileStorageEngine,
+  limits: { fileSize: "10000000" },
+  fileFilter: (req, file, cb) => {
+    const fileTypes = /jpeg|jpg|png|gif/;
+    const mimeType = fileTypes.test(file.mimetype);
+    const extname = fileTypes.test(path.extname(file.originalname));
+
+    if (mimeType & extname) {
+      return cb(null, true);
+    }
+
+    cb("proper files formate to upload");
+  },
+});
+
+userRouter.post("/register", upload.single("image"), async (req, res) => {
   const {
     email,
     password,
@@ -22,11 +48,12 @@ userRouter.post("/register", async (req, res) => {
     firstName,
     lastName,
     nickname,
-    image,
+
     address,
     phone,
   } = req.body;
   console.log("req.body :>> ", req.body);
+  console.log("req.files :>> ", req.file);
   try {
     const findUser = await User.findOne({ where: { email: email } });
     if (!findUser) {
@@ -36,6 +63,7 @@ userRouter.post("/register", async (req, res) => {
         firstName,
         lastName,
         email,
+        image: req.file.path,
         password: encryptedPassword,
         role,
         nickname,

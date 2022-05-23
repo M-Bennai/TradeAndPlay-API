@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class Article extends Model {
     /**
@@ -12,9 +13,19 @@ module.exports = (sequelize, DataTypes) => {
         as: "user",
         foreignKey: "userId",
       });
-      models.Article.hasOne(models.Category, {
+      models.Article.belongsTo(models.Category, {
         as: "category",
-        foreignKey: "articleId",
+        foreignKey: "categoryId",
+        onDelete: "CASCADE",
+      });
+      models.Article.belongsTo(models.Value, {
+        as: "value",
+        foreignKey: "valueId",
+        onDelete: "CASCADE",
+      });
+      models.Article.belongsTo(models.ageRange, {
+        as: "ageRange",
+        foreignKey: "ageRangeId",
         onDelete: "CASCADE",
       });
     }
@@ -25,8 +36,8 @@ module.exports = (sequelize, DataTypes) => {
       ageRange: DataTypes.STRING,
       condition: DataTypes.STRING,
       image: DataTypes.STRING,
-      price: DataTypes.INTEGER,
       description: DataTypes.STRING,
+      trade: DataTypes.BOOLEAN,
     },
     {
       sequelize,

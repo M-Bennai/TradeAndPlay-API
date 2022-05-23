@@ -9,6 +9,8 @@ const allowedOrigins = ["http://localhost:4000"];
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.static(__dirname + "/public"));
+app.use("/Images", express.static("Images"));
 app.use(cors(allowedOrigins));
 app.use(logger("dev"));
 app.get("/", (req, res) => {
