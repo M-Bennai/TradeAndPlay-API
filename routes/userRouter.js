@@ -48,7 +48,6 @@ userRouter.post("/register", upload.single("image"), async (req, res) => {
     firstName,
     lastName,
     nickname,
-
     address,
     phone,
   } = req.body;
@@ -63,7 +62,7 @@ userRouter.post("/register", upload.single("image"), async (req, res) => {
         firstName,
         lastName,
         email,
-        image: req.file.path,
+        image: "yoooo",
         password: encryptedPassword,
         role,
         nickname,

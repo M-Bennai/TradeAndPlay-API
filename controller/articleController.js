@@ -7,19 +7,20 @@ const articleController = {
   addArticle: async ({
     title,
     condition,
-    publicUrl,
     description,
+    image,
     userId,
     valueId,
     ageRangeId,
     categoryId,
   }) => {
+    console.log("image from controller :>> ", image);
+    console.log("title :>> ", title);
     const newArticle = await Article.create({
       id: uuidv4(),
       title,
-      image,
       condition,
-      image: publicUrl,
+      image,
       description,
       userId,
       categoryId,

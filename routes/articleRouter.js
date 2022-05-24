@@ -68,9 +68,7 @@ articleRouter.post("/create", async (req, res) => {
         userId,
         categoryId,
         valueId,
-        image,
         ageRangeId,
-        publicUrl,
       },
     } = req;
     console.log("file :>> ", file);
@@ -96,16 +94,16 @@ articleRouter.post("/create", async (req, res) => {
         console.log("publicUrl :>> ", publicUrl);
         await bucket.file(filename).makePublic();
 
-        const addNewArticle = await addArticle(
+        const addNewArticle = await addArticle({
           title,
           condition,
           description,
-          image,
+          image: publicUrl,
           userId,
           categoryId,
           valueId,
-          ageRangeId
-        );
+          ageRangeId,
+        });
         console.log("addNewArticle :>> ", addNewArticle);
         resolve(addNewArticle);
       });
