@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "valueId",
         onDelete: "CASCADE",
       });
-      models.Article.belongsTo(models.ageRange, {
+      models.Article.belongsTo(models.AgeRange, {
         as: "ageRange",
         foreignKey: "ageRangeId",
         onDelete: "CASCADE",
@@ -33,7 +33,6 @@ module.exports = (sequelize, DataTypes) => {
   Article.init(
     {
       title: DataTypes.STRING,
-      ageRange: DataTypes.STRING,
       condition: DataTypes.STRING,
       image: DataTypes.STRING,
       description: DataTypes.STRING,

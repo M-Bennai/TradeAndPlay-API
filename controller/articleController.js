@@ -6,9 +6,9 @@ const { Value } = require("../models");
 const articleController = {
   addArticle: async ({
     title,
-    ageRange,
     condition,
     image,
+    publicUrl,
     description,
     userId,
     valueId,
@@ -18,15 +18,16 @@ const articleController = {
     const newArticle = await Article.create({
       id: uuidv4(),
       title,
-      ageRange,
-      condition,
       image,
+      condition,
+      image: publicUrl,
       description,
       userId,
       categoryId,
       valueId,
       ageRangeId,
     });
+    console.log("newArticle :>> ", newArticle);
     return newArticle;
   },
 

@@ -12,10 +12,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      ageRange: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
       condition: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -63,6 +59,18 @@ module.exports = {
         foreignKey: true,
         references: {
           model: "Values",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
+      ageRangeId: {
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
+        allowNull: false,
+        foreignKey: true,
+        references: {
+          model: "AgeRanges",
           key: "id",
         },
         onUpdate: "CASCADE",
