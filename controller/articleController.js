@@ -7,7 +7,6 @@ const articleController = {
   addArticle: async ({
     title,
     condition,
-    image,
     publicUrl,
     description,
     userId,
