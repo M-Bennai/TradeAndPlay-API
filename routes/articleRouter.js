@@ -4,8 +4,8 @@ const articleRouter = require("express").Router();
 const jsonwebtoken = require("jsonwebtoken");
 const { Article } = require("../models");
 const { Op } = require("sequelize");
-const path = require("path");
-const multer = require("multer");
+// const path = require("path");
+// const multer = require("multer");
 const validateToken = require("../middleware/authMiddleware");
 const processFileMiddleware = require("../middleware/uploadFiles");
 
@@ -68,7 +68,7 @@ articleRouter.post("/create", async (req, res) => {
         userId,
         categoryId,
         valueId,
-        ageRangeId,
+        //ageRangeId,
       },
     } = req;
     console.log("file :>> ", file);
@@ -102,7 +102,7 @@ articleRouter.post("/create", async (req, res) => {
           userId,
           categoryId,
           valueId,
-          ageRangeId,
+          // ageRangeId,
         });
         console.log("addNewArticle :>> ", addNewArticle);
         resolve(addNewArticle);

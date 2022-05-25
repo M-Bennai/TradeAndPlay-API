@@ -11,7 +11,7 @@ const articleController = {
     image,
     userId,
     valueId,
-    ageRangeId,
+    // agerangeId,
     categoryId,
   }) => {
     console.log("image from controller :>> ", image);
@@ -25,7 +25,7 @@ const articleController = {
       userId,
       categoryId,
       valueId,
-      ageRangeId,
+      // agerangeId,
     });
     console.log("newArticle :>> ", newArticle);
     return newArticle;

@@ -23,6 +23,33 @@ module.exports = {
       trade: {
         type: Sequelize.BOOLEAN,
       },
+      userId: {
+        type: Sequelize.UUID,
+        onDelete: "CASCADE",
+        reference: {
+          model: "User",
+          key: "id",
+          as: "userId",
+        },
+      },
+      categoryId: {
+        type: Sequelize.UUID,
+        onDelete: "CASCADE",
+        reference: {
+          model: "User",
+          key: "id",
+          as: "userId",
+        },
+      },
+      valueId: {
+        type: Sequelize.UUID,
+        onDelete: "CASCADE",
+        reference: {
+          model: "User",
+          key: "id",
+          as: "userId",
+        },
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

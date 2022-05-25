@@ -2,8 +2,25 @@ const userRouter = require("express").Router();
 const { User } = require("../models");
 const bcrypt = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
-const multer = require("multer");
-const path = require("path");
+const { Storage } = require("@google-cloud/storage");
+const { format } = require("util");
+// const multer = require("multer");
+// const path = require("path");
+const processFileMiddleware = require("../middleware/uploadFiles");
+
+const uuid = require("uuid");
+const uuidv1 = uuid.v1;
+
+const storage = new Storage({
+  projectId: process.env.GCLOUD_PROJECT,
+  credentials: {
+    client_email: process.env.GCLOUD_CLIENT_EMAIL,
+    private_key: process.env.GCLOUD_PRIVATE_KEY,
+  },
+});
+
+const bucket = storage.bucket(process.env.GCS_BUCKET);
+
 const {
   addUser,
   updateUserEmail,
@@ -16,66 +33,95 @@ const {
 } = require("../controller/userController");
 const validateToken = require("../middleware/authMiddleware");
 
-const fileStorageEngine = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "Images");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
-const upload = multer({
-  storage: fileStorageEngine,
-  limits: { fileSize: "10000000" },
-  fileFilter: (req, file, cb) => {
-    const fileTypes = /jpeg|jpg|png|gif/;
-    const mimeType = fileTypes.test(file.mimetype);
-    const extname = fileTypes.test(path.extname(file.originalname));
+// const fileStorageEngine = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "Images");
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, Date.now() + path.extname(file.originalname));
+//   },
+// });
+// const upload = multer({
+//   storage: fileStorageEngine,
+//   limits: { fileSize: "10000000" },
+//   fileFilter: (req, file, cb) => {
+//     const fileTypes = /jpeg|jpg|png|gif/;
+//     const mimeType = fileTypes.test(file.mimetype);
+//     const extname = fileTypes.test(path.extname(file.originalname));
 
-    if (mimeType & extname) {
-      return cb(null, true);
-    }
+//     if (mimeType & extname) {
+//       return cb(null, true);
+//     }
 
-    cb("proper files formate to upload");
-  },
-});
+//     cb("proper files formate to upload");
+//   },
+// });
 
-userRouter.post("/register", upload.single("image"), async (req, res) => {
-  const {
-    email,
-    password,
-    role,
-    firstName,
-    lastName,
-    nickname,
-    address,
-    phone,
-  } = req.body;
-  console.log("req.body :>> ", req.body);
-  console.log("req.files :>> ", req.file);
+userRouter.post("/register", async (req, res) => {
   try {
-    const findUser = await User.findOne({ where: { email: email } });
-    if (!findUser) {
-      const encryptedPassword = await bcrypt.hash(password, 10);
-      console.log("encryptedPassword :>> ", encryptedPassword);
-      const newUser = await addUser({
+    await processFileMiddleware(req, res);
+    const {
+      file,
+      body: {
+        email,
+        password,
+        role,
         firstName,
         lastName,
-        email,
-        image: "yoooo",
-        password: encryptedPassword,
-        role,
         nickname,
-      });
-      console.log("newUser :>> ", newUser);
-      res.status(201).json({ msg: "User added succesfully", newUser });
-    } else {
-      res.status(400).json({ msg: "User already exit" });
-    }
+        address,
+        phone,
+      },
+    } = req;
     console.log("req.body :>> ", req.body);
+    console.log("req.files :>> ", req.file);
+    if (file.length === 0) {
+      throw new Error("no-file");
+    }
+    const newFile = new Promise((resolve, reject) => {
+      const filename = uuidv1() + "-" + req.file.originalname;
+      const blob = bucket.file(filename);
+      const blobStream = blob.createWriteStream({
+        resumable: false,
+      });
+      blobStream.on("error", (err) => {
+        res.status(500).json({ msg: err.message });
+        reject({ message: "blob-stream", data: err });
+      });
+      blobStream.on("finish", async (data) => {
+        const publicUrl = format(
+          `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+        );
+        console.log("bucket.name :>> ", bucket.name);
+        console.log("publicUrl :>> ", publicUrl);
+        await bucket.file(filename).makePublic();
+
+        const findUser = await User.findOne({ where: { email: email } });
+        if (!findUser) {
+          const encryptedPassword = await bcrypt.hash(password, 10);
+          console.log("encryptedPassword :>> ", encryptedPassword);
+          const newUser = await addUser({
+            firstName,
+            lastName,
+            email,
+            image: publicUrl,
+            password: encryptedPassword,
+            role,
+            nickname,
+          });
+          console.log("newUser :>> ", newUser);
+          resolve(newUser);
+        }
+      });
+      blobStream.end(req.file.buffer);
+    });
+    newFile.then((res) => {
+      console.log("res :>> ", res);
+    });
+    res.status(201).json({ msg: "User added succesfully" });
   } catch (error) {
     console.log("error :>> ", error);
-    res.status(401).json({ message: "can't register" });
+    res.status(400).json("An error was occured");
   }
 });
 
@@ -95,6 +141,7 @@ userRouter.post("/login", async (req, res) => {
         {
           email: user.email,
           role: user.role,
+          image: user.image,
           firstName: user.firstName,
           lastName: user.lastName,
           id: user.id,

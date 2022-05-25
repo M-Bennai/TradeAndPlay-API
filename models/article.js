@@ -23,11 +23,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "valueId",
         onDelete: "CASCADE",
       });
-      models.Article.belongsTo(models.AgeRange, {
-        as: "ageRange",
-        foreignKey: "ageRangeId",
-        onDelete: "CASCADE",
-      });
+      // models.Article.belongsTo(models.AgeRange, {
+      //   as: "ageRange",
+      //   foreignKey: "ageRangeId",
+      //   onDelete: "CASCADE",
+      // });
     }
   }
   Article.init(
