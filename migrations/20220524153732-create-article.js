@@ -36,18 +36,27 @@ module.exports = {
         type: Sequelize.UUID,
         onDelete: "CASCADE",
         reference: {
-          model: "User",
+          model: "Category",
           key: "id",
-          as: "userId",
+          as: "categoryId",
         },
       },
       valueId: {
         type: Sequelize.UUID,
         onDelete: "CASCADE",
         reference: {
-          model: "User",
+          model: "Value",
           key: "id",
-          as: "userId",
+          as: "valueId",
+        },
+      },
+      ageRangeId: {
+        type: Sequelize.UUID,
+        onDelete: "CASCADE",
+        reference: {
+          model: "AgeRange",
+          key: "id",
+          as: "ageRangeId",
         },
       },
       createdAt: {

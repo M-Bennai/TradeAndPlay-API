@@ -68,7 +68,7 @@ articleRouter.post("/create", async (req, res) => {
         userId,
         categoryId,
         valueId,
-        //ageRangeId,
+        ageRangeId,
       },
     } = req;
     console.log("file :>> ", file);
@@ -102,7 +102,7 @@ articleRouter.post("/create", async (req, res) => {
           userId,
           categoryId,
           valueId,
-          // ageRangeId,
+          ageRangeId,
         });
         console.log("addNewArticle :>> ", addNewArticle);
         resolve(addNewArticle);
