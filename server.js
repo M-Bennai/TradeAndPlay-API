@@ -25,7 +25,7 @@ app.get("/", (req, res) => {
 // }
 
 app.use("/api", require("./routes/index"));
-
+console.log("process.env.s :>> ", process.env.GCS_BUCKET);
 app.listen(port, () => {
   console.log(`listenning on port ${port}`);
 });
