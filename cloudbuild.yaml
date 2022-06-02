@@ -5,13 +5,16 @@ steps:
       [
         "build",
         "-t",
-        "eu.gcr.io/MyFirstProject/trade-and-play-api-prod:$COMMIT_SHA",
+        "eu.gcr.io/My First Project/trade-and-play-api-prod:$COMMIT_SHA",
         ".",
       ]
   # Push the container image to Container Registry
   - name: "gcr.io/cloud-builders/docker"
     args:
-      ["push", "eu.gcr.io/MyFirstProject/trade-and-play-api-prod::$COMMIT_SHA"]
+      [
+        "push",
+        "eu.gcr.io/My First Project/trade-and-play-api-prod::$COMMIT_SHA",
+      ]
   # Deploy container image to Cloud Run
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     entrypoint: gcloud
@@ -21,11 +24,11 @@ steps:
         "deploy",
         "trade-and-play-api-prod:${_ENV}",
         "--image",
-        "eu.gcr.io/MyFirstProject/trade-and-play-api-prod::$COMMIT_SHA",
+        "eu.gcr.io/My First Project/trade-and-play-api-prod::$COMMIT_SHA",
         "--region",
         "europe-west4",
         "--platform",
         "managed",
       ]
 images:
-  - eu.gcr.io/MyFirstProject/trade-and-play-api-prod::$COMMIT_SHA
+  - eu.gcr.io/My First Project/trade-and-play-api-prod::$COMMIT_SHA
