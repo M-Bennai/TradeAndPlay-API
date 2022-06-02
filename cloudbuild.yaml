@@ -13,7 +13,7 @@ steps:
     args:
       [
         "push",
-        "eu.gcr.io/trade-and-play/trade-and-play-api-production::$COMMIT_SHA",
+        "eu.gcr.io/trade-and-play/trade-and-play-api-production:$COMMIT_SHA",
       ]
   # Deploy container image to Cloud Run
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
@@ -24,11 +24,11 @@ steps:
         "deploy",
         "trade-and-play-api-production:${_ENV}",
         "--image",
-        "eu.gcr.io/trade-and-play/trade-and-play-api-production::$COMMIT_SHA",
+        "eu.gcr.io/trade-and-play/trade-and-play-api-production:$COMMIT_SHA",
         "--region",
         "europe-west4",
         "--platform",
         "managed",
       ]
 images:
-  - eu.gcr.io/trade-and-play/trade-and-play-api-production::$COMMIT_SHA
+  - eu.gcr.io/trade-and-play/trade-and-play-api-production:$COMMIT_SHA
