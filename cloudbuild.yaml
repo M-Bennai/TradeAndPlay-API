@@ -22,7 +22,7 @@ steps:
       [
         "run",
         "deploy",
-        "trade-and-play-api-production:${_ENV}",
+        "trade-and-play-api-production-${_ENV}",
         "--image",
         "eu.gcr.io/trade-and-play/trade-and-play-api-production:$COMMIT_SHA",
         "--region",
