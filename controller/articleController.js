@@ -14,7 +14,7 @@ const articleController = {
     ageRangeId,
     categoryId,
   }) => {
-    console.log("image from controller :>> ", image);
+    console.log("image from  fromcontroller :>> ", image);
     console.log("title :>> ", title);
     const newArticle = await Article.create({
       id: uuidv4(),
