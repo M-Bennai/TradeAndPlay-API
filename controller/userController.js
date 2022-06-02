@@ -81,7 +81,7 @@ const userController = {
   },
 
   updateUserEmail: async (email, id) => {
-    console.log("email :>> ", email);
+    console.log("emailemail :>> ", email);
     console.log("id :>> ", id);
     const user = await User.findByPk(id);
     if (user) {
