@@ -11,15 +11,15 @@ const processFileMiddleware = require("../middleware/uploadFiles");
 const uuid = require("uuid");
 const uuidv1 = uuid.v1;
 
-// const storage = new Storage({
-//   projectId: process.env.GCLOUD_PROJECT,
-//   credentials: {
-//     client_email: process.env.GCLOUD_CLIENT_EMAIL,
-//     private_key: process.env.GCLOUD_PRIVATE_KEY,
-//   },
-// });
+const storage = new Storage({
+  projectId: process.env.GCLOUD_PROJECT,
+  credentials: {
+    client_email: process.env.GCLOUD_CLIENT_EMAIL,
+    private_key: process.env.GCLOUD_PRIVATE_KEY,
+  },
+});
 
-// const bucket = storage.bucket(process.env.GCS_BUCKET);
+const bucket = storage.bucket(process.env.GCS_BUCKET);
 
 const {
   addUser,
@@ -57,73 +57,73 @@ const validateToken = require("../middleware/authMiddleware");
 //   },
 // });
 
-// userRouter.post("/register", async (req, res) => {
-//   try {
-//     await processFileMiddleware(req, res);
-//     const {
-//       file,
-//       body: {
-//         email,
-//         password,
-//         role,
-//         firstName,
-//         lastName,
-//         nickname,
-//         address,
-//         phone,
-//       },
-//     } = req;
-//     console.log("req.body :>> ", req.body);
-//     console.log("req.files :>> ", req.file);
-//     if (file.length === 0) {
-//       throw new Error("no-file");
-//     }
-//     const newFile = new Promise((resolve, reject) => {
-//       const filename = uuidv1() + "-" + req.file.originalname;
-//       const blob = bucket.file(filename);
-//       const blobStream = blob.createWriteStream({
-//         resumable: false,
-//       });
-//       blobStream.on("error", (err) => {
-//         res.status(500).json({ msg: err.message });
-//         reject({ message: "blob-stream", data: err });
-//       });
-//       blobStream.on("finish", async (data) => {
-//         const publicUrl = format(
-//           `https://storage.googleapis.com/${bucket.name}/${blob.name}`
-//         );
-//         console.log("bucket.name :>> ", bucket.name);
-//         console.log("publicUrl :>> ", publicUrl);
-//         await bucket.file(filename).makePublic();
+userRouter.post("/register", async (req, res) => {
+  try {
+    await processFileMiddleware(req, res);
+    const {
+      file,
+      body: {
+        email,
+        password,
+        role,
+        firstName,
+        lastName,
+        nickname,
+        address,
+        phone,
+      },
+    } = req;
+    console.log("req.body :>> ", req.body);
+    console.log("req.files :>> ", req.file);
+    if (file.length === 0) {
+      throw new Error("no-file");
+    }
+    const newFile = new Promise((resolve, reject) => {
+      const filename = uuidv1() + "-" + req.file.originalname;
+      const blob = bucket.file(filename);
+      const blobStream = blob.createWriteStream({
+        resumable: false,
+      });
+      blobStream.on("error", (err) => {
+        res.status(500).json({ msg: err.message });
+        reject({ message: "blob-stream", data: err });
+      });
+      blobStream.on("finish", async (data) => {
+        const publicUrl = format(
+          `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+        );
+        console.log("bucket.name :>> ", bucket.name);
+        console.log("publicUrl :>> ", publicUrl);
+        await bucket.file(filename).makePublic();
 
-//         const findUser = await User.findOne({ where: { email: email } });
-//         if (!findUser) {
-//           const encryptedPassword = await bcrypt.hash(password, 10);
-//           console.log("encryptedPassword :>> ", encryptedPassword);
-//           const newUser = await addUser({
-//             firstName,
-//             lastName,
-//             email,
-//             image: publicUrl,
-//             password: encryptedPassword,
-//             role,
-//             nickname,
-//           });
-//           console.log("newUser :>> ", newUser);
-//           resolve(newUser);
-//         }
-//       });
-//       blobStream.end(req.file.buffer);
-//     });
-//     newFile.then((res) => {
-//       console.log("res :>> ", res);
-//     });
-//     res.status(201).json({ msg: "User added succesfully" });
-//   } catch (error) {
-//     console.log("error :>> ", error);
-//     res.status(400).json("An error was occured");
-//   }
-// });
+        const findUser = await User.findOne({ where: { email: email } });
+        if (!findUser) {
+          const encryptedPassword = await bcrypt.hash(password, 10);
+          console.log("encryptedPassword :>> ", encryptedPassword);
+          const newUser = await addUser({
+            firstName,
+            lastName,
+            email,
+            image: publicUrl,
+            password: encryptedPassword,
+            role,
+            nickname,
+          });
+          console.log("newUser :>> ", newUser);
+          resolve(newUser);
+        }
+      });
+      blobStream.end(req.file.buffer);
+    });
+    newFile.then((res) => {
+      console.log("res :>> ", res);
+    });
+    res.status(201).json({ msg: "User added succesfully" });
+  } catch (error) {
+    console.log("error :>> ", error);
+    res.status(400).json("An error was occured");
+  }
+});
 
 userRouter.post("/login", async (req, res) => {
   try {
