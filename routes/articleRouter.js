@@ -18,6 +18,7 @@ const storage = new Storage({
     client_email: process.env.GCLOUD_CLIENT_EMAIL,
     private_key: process.env.GCLOUD_PRIVATE_KEY,
   },
+  scopes: "https://www.googleapis.com/auth/cloud-platform",
 });
 
 const bucket = storage.bucket(process.env.GCS_BUCKET);

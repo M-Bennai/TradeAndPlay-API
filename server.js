@@ -5,12 +5,15 @@ const port = process.env.PORT || 8080;
 const logger = require("morgan");
 const cors = require("cors");
 
-const allowedOrigins = ["http://localhost:8080"];
+const allowedOrigins = [
+  "http://localhost:8080",
+  "https://trade-and-play-api-production-production-kzubvcgwdq-ez.a.run.app/",
+  "https://trade-and-play-front-production-kzubvcgwdq-ez.a.run.app/",
+];
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(__dirname + "/public"));
-app.use("/Images", express.static("Images"));
 app.use(cors(allowedOrigins));
 app.use(logger("dev"));
 app.get("/", (req, res) => {
