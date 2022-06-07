@@ -25,7 +25,7 @@ module.exports = {
   gcpConnectLocal: {
     username: "postgres",
     password: "Bankai1010",
-    database: "trade-and-play-db",
+    database: "postgres",
     dialect: "postgres",
     host: "127.0.0.1",
     dialectOptions: {
