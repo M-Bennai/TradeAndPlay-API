@@ -74,7 +74,7 @@ userRouter.post("/register", async (req, res) => {
       },
     } = req;
     console.log("req.body :>> ", req.body);
-    console.log("req.files :>> ", req.file);
+    console.log("req.files dans le register:>> ", req.file);
     if (file.length === 0) {
       throw new Error("no-file");
     }
