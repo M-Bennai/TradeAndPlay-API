@@ -6,7 +6,7 @@ const jsonwebtoken = require("jsonwebtoken");
 ageRangeRouter.post(
   "/create",
   /*validateToken,*/ async (req, res) => {
-    console.log("req.body :>> ", req.body);
+    console.log("req.body >> ", req.body);
     const { range } = req.body;
     try {
       const addNewAgeRange = await addAgeRange({ range });
