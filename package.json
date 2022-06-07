@@ -8,7 +8,7 @@
     "server": "nodemon server.js",
     "migrate": "npx sequelize-cli db:migrate",
     "undomigrate": "npx sequelize-cli db:migrate:undo:all",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --timeout 10000"
   },
   "author": "",
   "license": "ISC",
@@ -28,6 +28,9 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "chai": "^4.3.6",
+    "chai-http": "^4.3.0",
+    "mocha": "^10.0.0",
     "sequelize-cli": "^6.4.1"
   }
 }

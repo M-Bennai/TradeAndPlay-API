@@ -32,4 +32,11 @@ module.exports = {
       socketPath: "/cloudsql/trade-and-play:europe-west4:trade-and-play-db",
     },
   },
+  gcpConnectCloudRun: {
+    username: "postgres",
+    password: "Bankai1010",
+    database: "postgres",
+    dialect: "postgres",
+    host: "/cloudsql/trade-and-play:europe-west4:trade-and-play-db",
+  },
 };
